@@ -1,0 +1,29 @@
+---
+  
+  - name: Playbook 1
+    hosts: node
+    become: true
+    tasks:
+      - name: Create directory 
+        ansible.builtin.file:
+          path: /app_data
+          state: directory
+          mode: 774
+
+      - name: Create Group 
+        ansible.builtin.group:
+          name: app_group
+          state: present
+          gid: 3000
+
+      - name: Add user toto
+        ansible.builtin.user:
+          name: app_user
+          create_home: yes
+          group: ansible
+
+      - name: Chown directory
+        ansible.builtin.file:
+          path: /app_data
+          group: app_group
+          owner: app_user
