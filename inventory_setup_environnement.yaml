@@ -1,0 +1,46 @@
+---
+  - name: Playbook 1
+    hosts: node
+    become: true
+    vars:
+      directory: /app_data
+    tasks:
+      - name: Set hostname
+        hostname:
+          name : "{{ hostname}}"
+
+      - name: Create directory 
+        ansible.builtin.file:
+          path: "{{ item }}"
+          state: directory
+          mode: 774
+        loop:
+          - /app_data1
+          - /app_data2
+          - /app_data3
+          
+
+      - name: Create Group 
+        ansible.builtin.group:
+          name: app_group
+          state: present
+          gid: 3000
+
+      - name: Add user toto
+        ansible.builtin.user:
+          name: app_user
+          create_home: yes
+          group: ansible
+
+      - name: Chown directory
+        ansible.builtin.file:
+          path: /app_data
+          group: app_group
+          owner: app_user
+
+      - name: Add all users
+        ansible.builtin.user:
+          name: "{{ item }}"
+          create_home: yes
+          group: ansible
+        loop: "{{ user_list }}"
