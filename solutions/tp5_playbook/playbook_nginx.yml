@@ -1,0 +1,35 @@
+---
+- name: Exercice Handlers - Configuration de Nginx sur Ubuntu
+  hosts: node
+  become: yes
+  
+  vars:
+    server_port: 8080
+    message: "--- Hello word ! ! !"
+
+  tasks:
+    - name: Installer Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes
+    
+    - name: Créer un fichier de configuration personnalisé
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Redémarrer Nginx
+
+    - name: Démarrer Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+
+  handlers:
+    - name: Redémarrer Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
