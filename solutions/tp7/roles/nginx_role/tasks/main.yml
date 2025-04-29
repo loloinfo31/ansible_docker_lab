@@ -1,0 +1,21 @@
+---
+# tasks file for nginx_role
+  - name: Deploy NGINX role
+    ansible.builtin.apt:
+      name: nginx
+      state: present
+      update_cache: yes
+
+  - name: Créer un fichier de configuration personnalisé
+    ansible.builtin.template:
+      src: templates/nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify: Redémarrer Nginx
+  
+  - name: Check URL
+    ansible.builtin.uri:
+      url: http://localhost:{{ nginx_port }}
+

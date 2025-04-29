@@ -1,0 +1,8 @@
+---
+- name: Installer et configurer Apache
+  hosts: all
+  become: true
+  roles:
+    - geerlingguy.apache
+  vars:
+    apache_listen_port: 8080

@@ -1,0 +1,9 @@
+---
+- name: Installer et configurer Apache
+  hosts: all
+  become: true
+  roles:
+    - nginx_role
+
+  vars:
+    nginx_port: 80
